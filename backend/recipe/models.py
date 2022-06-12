@@ -2,25 +2,106 @@
 from django.contrib.auth import get_user_model
 from django.db.models import (Model, ForeignKey, CASCADE, ManyToManyField,
                               PositiveIntegerField, ImageField, DateTimeField,
-                              TextField, CharField)
+                              TextField, CharField, SlugField,
+                              UniqueConstraint)
 from django.core.validators import MinValueValidator
+
 
 User = get_user_model()
 
 
-class Ingredient:
-    pass
+class Ingredient(Model):
+    """
+    Модель, содержащая ингредиенты.
+    """
+    measurement_unit = CharField(
+        verbose_name='Единицы измерения',
+        max_length=200,
+    )
+    name = CharField(
+        verbose_name='Ингредиент',
+        max_length=200,
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        ordering = ('name',)
+        constraints = (
+            UniqueConstraint(
+                name='Unique_measure_for_ingredient',
+                fields=('name', 'measurement_unit'),
+            ),
+        )
 
 
-class IngredientAmount:
-    pass
+class IngredientAmount(Model):
+    """
+    Модель связывающая ингредиенты с рецептом.
+    Так же хранит количество ингредиента в рецепте.
+    """
+    amount = PositiveIntegerField(
+        verbose_name='Количество',
+        default=0,
+        validators=(
+            MinValueValidator(1, 'Не может быть меньше 1.'),
+        ),
+    )
+    ingredients = ForeignKey(
+        to=Ingredient,
+        on_delete=CASCADE,
+        related_name='recipe',
+        verbose_name='Ингредиенты, связанные с рецептом',
+    )
+    recipe = ForeignKey(
+        to='Recipe',
+        on_delete=CASCADE,
+        related_name='ingredients',
+        verbose_name='Рецепты, содержащие ингредиенты',
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Количество ингредиентов'
+        ordering = ('recipe',)
+        constraints = (
+            UniqueConstraint(
+                name='Unique_ingredient_in_recipe',
+                fields=('ingredient', 'recipe'),
+            ),
+        )
 
 
-class Tag:
-    pass
+class Tag(Model):
+    """
+    Модель, описывающая теги для рецептов.
+    """
+    color = CharField(
+        verbose_name='Код цвета',
+        max_length=6,
+        default='ff',
+    )
+    name = CharField(
+        verbose_name='Тег',
+        max_length=200,
+        unique=True,
+    )
+    slug = SlugField(
+        verbose_name='Slug для тега',
+        max_length=200,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+        ordering = ('name',)
 
 
 class Recipe(Model):
+    """
+    Модель, описывающая рецепт.
+    """
     author = ForeignKey(
         to=User,
         on_delete=CASCADE,
@@ -70,3 +151,14 @@ class Recipe(Model):
     text = TextField(
         verbose_name='Описание рецепта',
     )
+
+    class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+        oredering = ('-pub_date',)
+        constraints = (
+            UniqueConstraint(
+                name='unique_per_author',
+                fields=('name', 'author'),
+            ),
+        )
