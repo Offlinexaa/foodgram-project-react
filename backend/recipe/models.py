@@ -1,11 +1,10 @@
 """Модуль содержит модели и их настройки для приложения recipe."""
 from django.contrib.auth import get_user_model
-from django.db.models import (Model, ForeignKey, CASCADE, ManyToManyField,
-                              PositiveIntegerField, ImageField, DateTimeField,
-                              TextField, CharField, SlugField,
-                              UniqueConstraint)
 from django.core.validators import MinValueValidator
-
+from django.db.models import (CASCADE, CharField, DateTimeField, ForeignKey,
+                              ImageField, ManyToManyField, Model,
+                              PositiveIntegerField, SlugField, TextField,
+                              UniqueConstraint)
 
 User = get_user_model()
 
