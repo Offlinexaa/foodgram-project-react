@@ -26,7 +26,7 @@ class FoodgramUser(AbstractUser):
         unique=True,
         max_length=150,
         validators=(
-            MinLengthValidator(min_length = 3),
+            MinLengthValidator(min_length=3),
             RegexValidator(),
         ),
     )
@@ -45,7 +45,7 @@ class FoodgramUser(AbstractUser):
         help_text='Обязательное поле',
         max_length=150,
         validators=(
-            MinLengthValidator(min_length = 6),
+            MinLengthValidator(min_length=6),
         ),
     )
     subscription = ManyToManyField(
