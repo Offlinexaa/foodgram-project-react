@@ -55,7 +55,7 @@ class IngredientAmount(Model):
     recipe = ForeignKey(
         to='Recipe',
         on_delete=CASCADE,
-        related_name='ingredients',
+        related_name='ingredient',
         verbose_name='Рецепты, содержащие ингредиенты',
     )
 
@@ -66,7 +66,7 @@ class IngredientAmount(Model):
         constraints = (
             UniqueConstraint(
                 name='Unique_ingredient_in_recipe',
-                fields=('ingredient', 'recipe'),
+                fields=('ingredients', 'recipe'),
             ),
         )
 
@@ -123,7 +123,7 @@ class Recipe(Model):
         to=Ingredient,
         through=IngredientAmount,
         verbose_name='Список ингредиентов',
-        related_name='recipe'
+        related_name='recipes'
     )
     image = ImageField(
         verbose_name='Изображение',
@@ -154,7 +154,7 @@ class Recipe(Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        oredering = ('-pub_date',)
+        ordering = ('-pub_date',)
         constraints = (
             UniqueConstraint(
                 name='unique_per_author',
