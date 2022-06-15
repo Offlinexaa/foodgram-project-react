@@ -1,3 +1,5 @@
+from re import match
+
 from django.contrib.auth import get_user_model
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
@@ -11,7 +13,8 @@ User = get_user_model()
 
 
 class UserSerializer(ModelSerializer):
-    """Сериализатор для модели FoodgramUser.
+    """
+    Сериализатор для модели FoodgramUser.
     """
     is_subscribed = SerializerMethodField()
 
@@ -60,8 +63,79 @@ class UserSerializer(ModelSerializer):
             raise ValidationError(
                 'Длина username допустима от 3 до 150'
             )
-        if not username.isalpha():
+        if not match(pattern=r'^[\w.@+-]+$', string=username):
             raise ValidationError(
                 'В username допустимы только буквы.'
             )
-        return username.capitalize()
+        return username.lower()
+
+
+class RecipeSmallSerializer(ModelSerializer):
+    """
+    Сериализатор для модели Recipe с сокращённым списком полей.
+    """
+    class Meta:
+        model = Recipe
+        fields = 'id', 'name', 'image', 'cooking_time'
+        read_only_fields = '__all__',
+
+
+class UserFollowsSerializer(UserSerializer):
+    """
+    Сериализатор для вывода авторов на которых подписан текущий пользователь.
+    """
+    recipes = RecipeSmallSerializer(many=True, read_only=True)
+    recipes_count = SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'recipes',
+            'recipes_count',
+            'is_subscribed',
+        )
+        read_only_fields = '__all__',
+
+    def get_recipes_count(self, obj: object) -> int:
+        """
+        Показывает суммарное количество рецептов у каждого автора.
+        """
+        return obj.recipes.count()
+
+    def get_is_subscribed(*args) -> bool:
+        """
+        Проверка подписки текущего пользователя на просматриваемого.
+        Переопределяем метод для сокращения нагрузки, так как всегда
+        возвращает `True`.
+        """
+        return True
+
+
+class IngredientSerializer(ModelSerializer):
+    """
+    Сериализатор для модели Ingredients.
+    """
+    class Meta:
+        model = Ingredient
+        fields = ('__all__', )
+        read_only_fields = ('__all__', )
+
+
+class TagSerializer(ModelSerializer):
+    """
+    Сериализатор для модели TAg.
+    """
+    class Meta:
+        model = Tag
+        fields = ('__all__', )
+        read_only_fields = ('__all__', )
+
+    def validate_color(self, color: str) -> str:
+        color = str(color).strip(' #')
+        hex_color_validate(color)
+        return f'#{color}'
