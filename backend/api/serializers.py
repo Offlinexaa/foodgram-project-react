@@ -8,8 +8,8 @@ from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
 from recipe.models import Ingredient, Recipe, Tag
-from api.validators import class_obj_validate, hex_color_validate
-from api.utils import recipe_amount_ingredients_set
+from .validators import class_obj_validate, hex_color_validate
+from .utils import recipe_amount_ingredients_set
 
 User = get_user_model()
 
