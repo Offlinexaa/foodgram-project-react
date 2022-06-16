@@ -78,7 +78,7 @@ class Tag(Model):
     color = CharField(
         verbose_name='Код цвета',
         max_length=6,
-        default='ff',
+        default='fff',
     )
     name = CharField(
         verbose_name='Тег',
