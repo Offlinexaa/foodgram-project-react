@@ -124,9 +124,9 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             return queryset
 
         if self.request.query_params.get('is_in_shopping_cart'):
-            queryset = queryset.filter(cart=user.id)
+            queryset = queryset.filter(shopping_cart=user.id)
         else:
-            queryset = queryset.exclude(cart=user.id)
+            queryset = queryset.exclude(shopping_cart=user.id)
 
         if self.request.query_params.get('is_favorited'):
             queryset = queryset.filter(favorite=user.id)
@@ -140,7 +140,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         """
         Добавляет/удалет рецепт в избранное.
         """
-        return self.add_del_obj(pk, 'is_favorited')
+        return self.add_del_obj(pk, 'favorite')
 
     @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
     def shopping_cart(self, request, pk):

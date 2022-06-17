@@ -6,9 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='String from .env')
 
-DEBUG = True  # os.getenv('DEBUG', default=False)
+DEBUG = os.getenv('DEBUG', default=False)
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default=['*'])
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS', default=['*']
+).strip().split(sep=';')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -109,10 +111,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if DEBUG:
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
@@ -136,6 +135,11 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
+
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    'CSRF_TO',
+    default='http://localhost http://127.0.0.1',
+).strip().split(sep=';')
 
 DJOSER = {
     'LOGIN_FIELD': 'email',

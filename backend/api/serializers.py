@@ -134,7 +134,7 @@ class TagSerializer(ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = ('__all__', )
+        fields = ('name', 'color', 'slug', )
         read_only_fields = ('__all__', )
 
     def validate_color(self, color: str) -> str:
