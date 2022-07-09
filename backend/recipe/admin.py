@@ -1,6 +1,7 @@
 from django.contrib.admin import ModelAdmin, TabularInline, register
 from django.utils.safestring import mark_safe
 
+from .forms import TagForm
 from .models import Ingredient, IngredientAmount, Recipe, Tag
 
 EMPTY_VAL_PLACEHOLDER = 'Не указано'
@@ -49,7 +50,16 @@ class RecipeAdmin(ModelAdmin):
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
+    form = TagForm
     list_display = ('name', 'slug', 'color', )
+    fieldsets = (
+        (
+            None,
+            {
+                'fields': (('name', 'slug'), 'color')
+            }
+        ),
+    )
     search_fields = ('name', )
     save_on_top = True
     empty_value_display = EMPTY_VAL_PLACEHOLDER

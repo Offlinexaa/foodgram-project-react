@@ -134,7 +134,7 @@ class TagSerializer(ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = ('name', 'color', 'slug', )
+        fields = ('id', 'name', 'color', 'slug', )
         read_only_fields = ('__all__', )
 
     def validate_color(self, color: str) -> str:
@@ -253,10 +253,10 @@ class RecipeSerializer(ModelSerializer):
         Создаёт новый объект модели Recipe.
         """
         image = validated_data.pop('image')
-        tags = validated_data.pop('tags')
+        tags_data = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
-        recipe.tags.set(tags)
+        recipe.tags.set(tags_data)
         recipe_amount_ingredients_set(recipe, ingredients)
         return recipe
 

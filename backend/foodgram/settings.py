@@ -9,7 +9,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='String from .env')
 DEBUG = os.getenv('DEBUG', default=False)
 
 ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOSTS', default=['*']
+    'ALLOWED_HOSTS', default='*;backend'
 ).strip().split(sep=';')
 
 INSTALLED_APPS = [
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'recipe.apps.RecipeConfig',
     'api.apps.ApiConfig',
+    'colorfield',
 ]
 
 MIDDLEWARE = [
