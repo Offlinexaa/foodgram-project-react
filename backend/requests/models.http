@@ -1,0 +1,27 @@
+@baseurl = http://localhost/api
+
+###
+# @name Login
+POST {{baseurl}}/auth/token/login/
+Content-Type: application/json
+
+{
+    "email": "a@a.local",
+    "password":"admin"
+}
+###
+
+@token = {{Login.response.body.auth_token}}
+
+###
+
+GET http://localhost/api/tags/
+Authorization: token {{ token }}
+
+###
+
+GET http://localhost/api/recipes/
+Authorization: token {{token}}
+
+###
+
