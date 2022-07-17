@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'recipe.apps.RecipeConfig',
     'api.apps.ApiConfig',
-    'colorfield',
 ]
 
 MIDDLEWARE = [
@@ -139,7 +138,7 @@ REST_FRAMEWORK = {
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     'CSRF_TO',
-    default='http://localhost http://127.0.0.1',
+    default='http://localhost;http://127.0.0.1',
 ).strip().split(sep=';')
 
 DJOSER = {
@@ -155,6 +154,6 @@ DJOSER = {
         'user': 'api.serializers.UserSerializer',
         'user_list': 'api.serializers.UserSerializer',
         'current_user': 'api.serializers.UserSerializer',
-        'user_create': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.CreateUserSerializer',
     },
 }

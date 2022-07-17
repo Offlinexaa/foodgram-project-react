@@ -28,7 +28,6 @@ class UserSerializer(ModelSerializer):
             'username',
             'first_name',
             'last_name',
-            'password',
             'is_subscribed',
         )
         extra_kwargs = {'password': {'write_only': True}}
@@ -42,34 +41,6 @@ class UserSerializer(ModelSerializer):
         if user.is_anonymous or (user == obj):
             return False
         return user.subscribe.filter(id=obj.id).exists()
-
-    def create(self, validated_data: dict) -> object:
-        """
-        Создаёт нового пользователя.
-        """
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
-    def validate_username(self, username: str):
-        """
-        Проверяет введённый юзернейм.
-        """
-        if len(username) < 3:
-            raise ValidationError(
-                'Длина username допустима от 3 до 150'
-            )
-        if not match(pattern=r'^[\w.@+-]+$', string=username):
-            raise ValidationError(
-                'В username допустимы только буквы.'
-            )
-        return username.lower()
 
 
 class RecipeSmallSerializer(ModelSerializer):
@@ -118,6 +89,48 @@ class UserFollowsSerializer(UserSerializer):
         return True
 
 
+class CreateUserSerializer(UserSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'password'
+        )
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data: dict) -> object:
+        """
+        Создаёт нового пользователя.
+        """
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
+
+    def validate_username(self, username: str):
+        """
+        Проверяет введённый юзернейм.
+        """
+        if len(username) < 3:
+            raise ValidationError(
+                'Длина username допустима от 3 до 150'
+            )
+        if not match(pattern=r'^[\w.@+-]+$', string=username):
+            raise ValidationError(
+                'В username допустимы только буквы.'
+            )
+        return username.lower()
+
+
 class IngredientSerializer(ModelSerializer):
     """
     Сериализатор для модели Ingredients.
@@ -134,7 +147,7 @@ class TagSerializer(ModelSerializer):
     """
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'color', 'slug', )
+        fields = '__all__'
         read_only_fields = ('__all__', )
 
     def validate_color(self, color: str) -> str:
@@ -253,10 +266,10 @@ class RecipeSerializer(ModelSerializer):
         Создаёт новый объект модели Recipe.
         """
         image = validated_data.pop('image')
-        tags_data = validated_data.pop('tags')
+        tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
-        recipe.tags.set(tags_data)
+        recipe.tags.set(tags)
         recipe_amount_ingredients_set(recipe, ingredients)
         return recipe
 
