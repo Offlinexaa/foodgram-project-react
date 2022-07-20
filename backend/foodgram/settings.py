@@ -4,7 +4,7 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='String from .env')
+SECRET_KEY = os.getenv('SECRET_KEY', default='String_from_.env')
 
 DEBUG = os.getenv('DEBUG', default=False)
 
@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'recipe.apps.RecipeConfig',
     'api.apps.ApiConfig',
-    'colorfield',
 ]
 
 MIDDLEWARE = [
@@ -59,27 +58,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv(
+            'DB_ENGINE',
+            default='django.db.backends.postgresql'
+        ),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='password'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default=5432)
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv(
-                'DB_ENGINE',
-                default='django.db.backends.postgresql'
-            ),
-            'NAME': os.getenv('DB_NAME', default='postgres'),
-            'USER': os.getenv('POSTGRES_USER', default='postgres'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='password'),
-            'HOST': os.getenv('DB_HOST', default='db'),
-            'PORT': os.getenv('DB_PORT', default=5432)
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -139,7 +130,7 @@ REST_FRAMEWORK = {
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     'CSRF_TO',
-    default='http://localhost http://127.0.0.1',
+    default='http://localhost;http://127.0.0.1',
 ).strip().split(sep=';')
 
 DJOSER = {
@@ -155,6 +146,6 @@ DJOSER = {
         'user': 'api.serializers.UserSerializer',
         'user_list': 'api.serializers.UserSerializer',
         'current_user': 'api.serializers.UserSerializer',
-        'user_create': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.CreateUserSerializer',
     },
 }
