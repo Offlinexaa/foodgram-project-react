@@ -11,16 +11,68 @@ Content-Type: application/json
 }
 ###
 
+# Создаём пользователя
+POST {{baseurl}}/users/
+Content-Type: application/json
+
+{
+    "email": "b@b.local",
+    "username": "damin",
+    "first_name": "damin",
+    "last_name": "root",
+    "password": "Quadmin1!"
+}
+
+###
+
 @token = {{Login.response.body.auth_token}}
 
 ###
 
+# Список пользователей
 GET {{baseurl}}/users/
 Authorization: token {{ token }}
 
 ###
 
+# Данные о себе
 GET {{baseurl}}/users/me/
 Authorization: token {{token}}
 
 ###
+
+# Данные о другом пользователе
+GET {{baseurl}}/users/2/
+Authorization: token {{token}}
+
+###
+
+# Подписаться от юзера 2
+POST {{baseurl}}/users/2/subscribe/
+Authorization: token {{token}}
+
+###
+
+# Отписаться от юзера 2
+DELETE {{baseurl}}/users/2/subscribe/
+Authorization: token {{token}}
+
+###
+
+# Создаём пользователя 3
+POST {{baseurl}}/users/
+Content-Type: application/json
+
+{
+    "email": "c@c.local",
+    "username": "notdamin",
+    "first_name": "notadmin",
+    "last_name": "noroot",
+    "password": "fbybvhjkwedsc#3r32*!"
+}
+
+###
+
+# Список подписок текущего пользователя
+GET {{baseurl}}/users/subscriptions/
+Authorization: token {{token}}

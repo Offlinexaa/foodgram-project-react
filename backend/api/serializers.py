@@ -40,7 +40,7 @@ class UserSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous or (user == obj):
             return False
-        return user.subscribe.filter(id=obj.id).exists()
+        return user.subscription.filter(id=obj.id).exists()
 
 
 class RecipeSmallSerializer(ModelSerializer):

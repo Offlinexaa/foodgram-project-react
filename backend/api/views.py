@@ -49,7 +49,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         user = self.request.user
         if not user.is_authenticated:
             return Response(status=HTTP_401_UNAUTHORIZED)
-        authors = user.followers.all()
+        authors = User.objects.filter(followers=user)
         pages = self.paginate_queryset(authors)
         serializer = UserFollowsSerializer(
             pages,
