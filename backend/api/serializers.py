@@ -143,7 +143,7 @@ class IngredientSerializer(ModelSerializer):
 
 class TagSerializer(ModelSerializer):
     """
-    Сериализатор для модели TAg.
+    Сериализатор для модели Tag.
     """
     class Meta:
         model = Tag
@@ -223,7 +223,7 @@ class RecipeSerializer(ModelSerializer):
         Проверка вводных данных при создании/редактировании рецепта.
         """
         name = str(self.initial_data.get('name')).strip()
-        tags = self.initial_data.get('tags')
+        tags = self.initial_data.getlist('tags')
         ingredients = self.initial_data.get('ingredients')
         values_as_list = (tags, ingredients)
 
