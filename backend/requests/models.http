@@ -15,7 +15,13 @@ Content-Type: application/json
 
 ###
 
+# Тест тэгов
 GET http://localhost/api/tags/
+Authorization: token {{ token }}
+
+###
+
+GET http://localhost/api/tags/2/
 Authorization: token {{ token }}
 
 ###
