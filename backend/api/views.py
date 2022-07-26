@@ -76,10 +76,11 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly, )
+    pagination_class = None
 
     def get_queryset(self):
         """
-        Получает список пользователей в соответствии с параметрами поиска.
+        Получает список ингредиентов в соответствии с параметрами поиска.
         Поиск объектов по совпадению в начале строки или по содержанию
         подстроки в имени.
         """

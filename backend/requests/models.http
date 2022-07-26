@@ -13,21 +13,38 @@ Content-Type: application/json
 
 @token = {{Login.response.body.auth_token}}
 
-###
+### Тест тэгов
 
-# Тест тэгов
-GET http://localhost/api/tags/
+# Список
+GET {{baseurl}}/tags/
 Authorization: token {{ token }}
 
 ###
 
-GET http://localhost/api/tags/2/
+# Экземпляр
+GET {{baseurl}}/tags/2/
 Authorization: token {{ token }}
 
-###
+### Тест ингредиентов
 
-GET http://localhost/api/recipes/
+# Список
+GET {{baseurl}}/ingredients/
 Authorization: token {{token}}
 
 ###
+
+# Экземпляр
+GET {{baseurl}}/ingredients/3/
+Authorization: token {{token}}
+
+### Тест рецептов
+
+# Список
+GET {{baseurl}}/recipes/
+Authorization: token {{token}}
+
+###
+
+GET {{baseurl}}/recipes/0/
+Authorization: token {{token}}
 
