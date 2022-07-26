@@ -159,6 +159,8 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Возвращает csv файл со списком ингредиентов.
         """
         user = self.request.user
+        if not user.is_authenticated:
+            return Response(status=HTTP_401_UNAUTHORIZED)
         if not user.in_cart.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
         ingredients = IngredientAmount.objects.filter(
@@ -166,8 +168,10 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         ).values(
             ingredient=F('ingredients__name'),
             measure=F('ingredients__measurement_unit')
+        ).order_by(
+            'ingredient'
         ).annotate(
-            amount=Sum('amount')
+            sum_amount=Sum('amount')
         )
 
         filename = 'shopping_list.csv'
@@ -182,7 +186,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             shopping_list += str.format(
                 '"{0}", "{1}", "{2}"\n',
                 ingredient['ingredient'],
-                ingredient['amount'],
+                ingredient['sum_amount'],
                 ingredient['measure']
             )
 

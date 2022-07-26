@@ -241,24 +241,19 @@ class RecipeSerializer(ModelSerializer):
             )
 
         valid_ingredients = []
+        valid_amounts = []
         for item in ingredients:
             ingredient = get_object_or_404(Ingredient, id=item['id'])
             if ingredient in valid_ingredients:
                 raise ValidationError('Ингредиенты не должны повторяться')
             valid_ingredients.append(ingredient)
-            # ingredient_id = ingredient.get('id')
-            # ingredient = class_obj_validate(
-            #     value=ingredient_id,
-            #     klass=Ingredient
-            # )
-            # amount = ingredient.get('amount')
-            # class_obj_validate(amount)
-            # valid_ingredients.append(
-            #     {
-            #         'ingredient': ingredient,
-            #         'amount': amount,
-            #     }
-            # )
+            class_obj_validate(value=item['amount'])
+            valid_amounts.append(item['amount'])
+        valid_ingredients = [
+            dict(ingredient=i, amount=a) for i, a in zip(
+                valid_ingredients, valid_amounts
+            )
+        ]
 
         data['name'] = name.lower()
         data['tags'] = tags

@@ -45,6 +45,10 @@ Authorization: token {{token}}
 
 ###
 
-GET {{baseurl}}/recipes/0/
+GET {{baseurl}}/recipes/1/
 Authorization: token {{token}}
 
+###
+
+GET {{baseurl}}/recipes/download_shopping_cart/
+Authorization: token {{token}}

@@ -12,7 +12,7 @@ class AuthorAdminOrReadOnly(IsAuthenticatedOrReadOnly):
             or (
                 request.user.is_authenticated
                 and (
-                    request.user.is_admin
+                    request.user.is_superuser
                     or request.user == obj.author
                 )
             )
@@ -28,7 +28,7 @@ class AdminOrReadOnly(BasePermission):
             request.method in ('GET', )
             or (
                 request.user.is_authenticated
-                and request.user.is_admin
+                and request.user.is_superuser
             )
         )
 
@@ -43,7 +43,7 @@ class AdminOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
             or (
                 request.user.is_authenticated
                 and (
-                    request.user.is_admin
+                    request.user.is_superuser
                     or request.user == obj
                 )
             )
