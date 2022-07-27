@@ -1,5 +1,6 @@
 from re import match
 from typing import Any
+from django.shortcuts import get_object_or_404
 
 from drf_extra_fields.fields import Base64ImageField
 from django.contrib.auth import get_user_model
@@ -137,7 +138,7 @@ class IngredientSerializer(ModelSerializer):
     """
     class Meta:
         model = Ingredient
-        fields = ('__all__', )
+        fields = '__all__'
         read_only_fields = ('__all__', )
 
 
@@ -223,7 +224,7 @@ class RecipeSerializer(ModelSerializer):
         Проверка вводных данных при создании/редактировании рецепта.
         """
         name = str(self.initial_data.get('name')).strip()
-        tags = self.initial_data.getlist('tags')
+        tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
         values_as_list = (tags, ingredients)
 
@@ -240,20 +241,19 @@ class RecipeSerializer(ModelSerializer):
             )
 
         valid_ingredients = []
-        for ingredient in ingredients:
-            ingredient_id = ingredient.get('id')
-            ingredient = class_obj_validate(
-                value=ingredient_id,
-                klass=Ingredient
+        valid_amounts = []
+        for item in ingredients:
+            ingredient = get_object_or_404(Ingredient, id=item['id'])
+            if ingredient in valid_ingredients:
+                raise ValidationError('Ингредиенты не должны повторяться')
+            valid_ingredients.append(ingredient)
+            class_obj_validate(value=item['amount'])
+            valid_amounts.append(item['amount'])
+        valid_ingredients = [
+            dict(ingredient=i, amount=a) for i, a in zip(
+                valid_ingredients, valid_amounts
             )
-            amount = ingredient.get('amount')
-            class_obj_validate(amount)
-            valid_ingredients.append(
-                {
-                    'ingredient': ingredient,
-                    'amount': amount,
-                }
-            )
+        ]
 
         data['name'] = name.lower()
         data['tags'] = tags
