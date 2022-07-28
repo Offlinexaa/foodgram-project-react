@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime as dt
 
 from django.contrib.auth import get_user_model
@@ -108,9 +109,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
         """
-        Загружает файл *.csv со списком покупок.
-        Считает сумму ингредиентов в рецептах выбранных для покупки.
-        Возвращает csv файл со списком ингредиентов.
+        Загружает файл *.csv со списком ингредиентов.
         """
         user = self.request.user
         if not user.is_authenticated:
@@ -131,23 +130,23 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         filename = 'shopping_list.csv'
         create_time = dt.now().strftime('%d.%m.%Y %H:%M')
 
-        shopping_list = (
-            f'Список покупок пользователя: {user.first_name}\n'
-            f'{create_time}\n\n'
-        )
-        shopping_list += ('"Ингредиент", "Количество", "Единицы измерения"\n')
-        for ingredient in ingredients:
-            shopping_list += str.format(
-                '"{0}", "{1}", "{2}"\n',
-                ingredient['ingredient'],
-                ingredient['sum_amount'],
-                ingredient['measure']
-            )
-
-        shopping_list += '\nСформировано в продуктовом помощнике Foodgram'
-
-        response = HttpResponse(
-            shopping_list, content_type='text.csv; charset=utf-8'
-        )
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
         response['Content-Disposition'] = f'attachment; filename={filename}'
+
+        writer = csv.writer(response)
+        writer.writerow([f'Список покупок пользователя: {user.first_name}', ])
+        writer.writerow([f'{create_time}', ])
+        writer.writerow(['', ])
+        writer.writerow(['Ингредиент', 'Количество', 'Единицы измерения'])
+        for ingredient in ingredients:
+            writer.writerow(
+                [
+                    ingredient['ingredient'],
+                    ingredient['sum_amount'],
+                    ingredient['measure']
+                ]
+            )
+        writer.writerow(['', ])
+        writer.writerow(['Сформировано в продуктовом помощнике Foodgram', ])
+
         return response
