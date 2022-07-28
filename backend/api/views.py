@@ -1,5 +1,4 @@
 from datetime import datetime as dt
-from urllib.parse import unquote
 
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
@@ -14,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from .filters import IngredientFilter, RecipeFilter
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
 from .permissions import AdminOrReadOnly, AuthorAdminOrReadOnly
@@ -77,26 +77,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly, )
     pagination_class = None
-
-    def get_queryset(self):
-        """
-        Получает список ингредиентов в соответствии с параметрами поиска.
-        Поиск объектов по совпадению в начале строки или по содержанию
-        подстроки в имени.
-        """
-        name = self.request.query_params.get('name')
-        queryset = self.queryset
-        if name:
-            if name[0] == '%':
-                name = unquote(name)
-            name = name.lower()
-            queryset_startswith = list(queryset.filter(name__startswith=name))
-            queryset_contains = list(queryset.filter(name__contains=name))
-            queryset_startswith.extend(
-                [i for i in queryset_contains if i not in queryset_startswith]
-            )
-            queryset = queryset_startswith
-        return queryset
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
@@ -108,34 +89,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     add_serializer = RecipeSmallSerializer
     permission_classes = (AuthorAdminOrReadOnly, )
     pagination_class = PageLimitPagination
-
-    def get_queryset(self):
-        queryset = self.queryset
-
-        tags = self.request.query_params.getlist('tags')
-        if tags:
-            queryset = queryset.filter(
-                tags__slug__in=tags).distinct()
-
-        author = self.request.query_params.get('author')
-        if author:
-            queryset = queryset.filter(author=author)
-
-        user = self.request.user
-        if not user.is_authenticated:
-            return queryset
-
-        if self.request.query_params.get('is_in_shopping_cart'):
-            queryset = queryset.filter(shopping_cart=user.id)
-        else:
-            queryset = queryset.exclude(shopping_cart=user.id)
-
-        if self.request.query_params.get('is_favorited'):
-            queryset = queryset.filter(favorite=user.id)
-        else:
-            queryset = queryset.exclude(favorite=user.id)
-
-        return queryset
+    filterset_class = RecipeFilter
 
     @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
     def favorite(self, request, pk):
