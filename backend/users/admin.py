@@ -1,4 +1,4 @@
-"""Модуль содержит настройки админки для приложения usesr."""
+"""Модуль описания настроек админки для приложения usesr."""
 from django.contrib.admin import register
 from django.contrib.auth.admin import UserAdmin
 
@@ -7,6 +7,7 @@ from .models import FoodgramUser
 
 @register(FoodgramUser)
 class FoodgramUserAdmin(UserAdmin):
+    """Класс настройки вида админки для пользователя."""
     list_display = (
         'username',
         'email',

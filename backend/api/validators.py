@@ -1,3 +1,4 @@
+"""Модуль описания валидаторов."""
 from string import hexdigits
 
 from rest_framework.serializers import ValidationError
@@ -5,8 +6,7 @@ from rest_framework.serializers import ValidationError
 
 def class_obj_validate(value: str, klass: object = None) -> object:
     """
-    Проверка корректности переданного значения.
-
+    Проверка типа переданного значения.
     Если передан класс, проверяет существует ли объект с переданным id.
     При нахождении объекта создаётся Queryset[] из которого
     для дальнейшей работы возвращается первое значение.

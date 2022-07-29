@@ -1,3 +1,4 @@
+"""Модуль описания миксинов."""
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
 class AddDelViewMixin:
     """
     Миксин содержит методы добавления/удаления объекта связи типа
-    многие-ко-многим.
+    "многие-ко-многим".
     """
 
     add_serializer = None

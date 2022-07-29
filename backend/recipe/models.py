@@ -1,4 +1,4 @@
-"""Модуль содержит модели и их настройки для приложения recipe."""
+"""Модуль описания моделей и их настроек для приложения recipe."""
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db.models import (CASCADE, CharField, DateTimeField, ForeignKey,
@@ -10,9 +10,7 @@ User = get_user_model()
 
 
 class Ingredient(Model):
-    """
-    Модель, содержащая ингредиенты.
-    """
+    """Модель ингредиента."""
     measurement_unit = CharField(
         verbose_name='Единицы измерения',
         max_length=200,
@@ -72,9 +70,7 @@ class IngredientAmount(Model):
 
 
 class Tag(Model):
-    """
-    Модель, описывающая теги для рецептов.
-    """
+    """Модель тега."""
     color = CharField(
         verbose_name='Код цвета',
         max_length=7,
@@ -98,9 +94,7 @@ class Tag(Model):
 
 
 class Recipe(Model):
-    """
-    Модель, описывающая рецепт.
-    """
+    """Модель рецепта."""
     author = ForeignKey(
         to=User,
         on_delete=CASCADE,

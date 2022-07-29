@@ -1,3 +1,4 @@
-tag000,tag000,#0000FF
-tag001,tag001,#00FF00
-tag002,tag002,#FF0000
+Завтрак,breakfast,#0000FF
+Обед,dinner,#00FF00
+Ужин,evening_meal,#FF0000
+Десерт,dessert,#F490EB

@@ -7,19 +7,7 @@ from django.utils.deconstruct import deconstructible
 
 @deconstructible
 class MinLengthValidator:
-    """
-    Проверяет минимальную длинну.
-    Args:
-        min_length: int
-            Минимально допустимая длинна поля.
-            По умолчанию min_length = 0.
-        message: str
-            Текст ошибки, выводимый при слишком коротком значении.
-
-    Raises:
-        ValiationError:
-            Значение слишком короткое.
-    """
+    """Проверяет длинну."""
     min_length = 0
     message = 'Значение слишком короткое.'
 
@@ -36,19 +24,7 @@ class MinLengthValidator:
 
 @deconstructible
 class RegexValidator:
-    """
-    Проверяет на соответствие регулялярному выражению.
-
-    args:
-        regex: str
-            Регулярное выражение на соответствие которому проводится проверка.
-        message: str
-            Текст ошибки, выводимый при наличии в поле недопустимых символов.
-
-    Raises:
-        ValidationError:
-            Значение поля содержит недопустимые символы.
-    """
+    """Проверяет на соответствие регулялярному выражению."""
     regex = r'^[\w.@+-]+\Z'
     message = ('Значение поля содержит недопустимые символы.')
 

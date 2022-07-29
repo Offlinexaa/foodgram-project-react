@@ -1,3 +1,4 @@
+"""Команда загрузки в БД данных из файлов формата *.csv."""
 import csv
 
 from django.core.management.base import BaseCommand

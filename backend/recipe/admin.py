@@ -1,3 +1,4 @@
+"""Модуль настройки админки для моделей рецептов, ингредиентов и тегов."""
 from django.contrib.admin import ModelAdmin, TabularInline, register
 from django.utils.safestring import mark_safe
 
@@ -9,6 +10,7 @@ EMPTY_VAL_PLACEHOLDER = 'Не указано'
 
 @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
+    """Класс настройки вида админки для ингредиентов."""
     list_display = ('name', 'measurement_unit', )
     search_fields = ('name', )
     list_filter = ('name', )
@@ -18,16 +20,19 @@ class IngredientAdmin(ModelAdmin):
 
 @register(IngredientAmount)
 class IngredientAmountAdmin(ModelAdmin):
+    """Класс настройки вида админки для количества ингредиентов."""
     pass
 
 
 class IngredientInline(TabularInline):
+    """Класс настройки виджета отображения количества ингредиентов."""
     model = IngredientAmount
     extra = 1
 
 
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
+    """Класс настройки вида админки для рецептов."""
     list_display = ('name', 'author', 'getimage', )
     fields = (
         ('image', ),
@@ -50,6 +55,7 @@ class RecipeAdmin(ModelAdmin):
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
+    """Класс настройки вида админки для тегов."""
     form = TagForm
     list_display = ('name', 'slug', 'color', )
     fieldsets = (
