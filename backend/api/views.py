@@ -1,3 +1,4 @@
+"""Модуль описания вьюсетов."""
 import csv
 from datetime import datetime as dt
 
@@ -22,7 +23,6 @@ from .serializers import (IngredientSerializer, RecipeSerializer,
                           RecipeSmallSerializer, TagSerializer,
                           UserFollowsSerializer)
 
-
 User = get_user_model()
 
 
@@ -37,16 +37,12 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
     @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
     def subscribe(self, request, id):
-        """
-        Создаёт/удалет связь между пользователями.
-        """
+        """Создаёт/удалет подписку текущего пользователя на автора рецепта."""
         return self.add_del_obj(id, 'subscribe')
 
     @action(methods=('GET', ), detail=False)
     def subscriptions(self, request):
-        """
-        Список подписок пользоваетеля.
-        """
+        """Список подписок текущего пользоваетеля."""
         user = self.request.user
         if not user.is_authenticated:
             return Response(status=HTTP_401_UNAUTHORIZED)
@@ -61,9 +57,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
 
 class TagViewSet(ReadOnlyModelViewSet):
-    """
-    Вьюсет для работы с тэгами.
-    """
+    """Вьюсет для работы с тэгами."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AdminOrReadOnly, )
@@ -71,9 +65,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
-    """
-    Вьюсет для работы с ингредиентами.
-    """
+    """Вьюсет для работы с ингредиентами."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (AdminOrReadOnly, )
@@ -82,9 +74,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
-    """
-    Вьюсет для работы с рецептами.
-    """
+    """Вьюсет для работы с рецептами."""
     queryset = Recipe.objects.select_related('author')
     serializer_class = RecipeSerializer
     add_serializer = RecipeSmallSerializer
@@ -94,23 +84,17 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
 
     @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
     def favorite(self, request, pk):
-        """
-        Добавляет/удалет рецепт в избранное.
-        """
+        """Добавляет/удалет рецепт в избранное текущему пользователю."""
         return self.add_del_obj(pk, 'favorite')
 
     @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
     def shopping_cart(self, request, pk):
-        """
-        Добавляет/удалет рецепт в список покупок.
-        """
+        """Добавляет/удалет рецепт в список покупок текущего пользователя."""
         return self.add_del_obj(pk, 'shopping_cart')
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):
-        """
-        Загружает файл *.csv со списком ингредиентов.
-        """
+        """Загружает файл shopping_list.csv со списком ингредиентов."""
         user = self.request.user
         if not user.is_authenticated:
             return Response(status=HTTP_401_UNAUTHORIZED)

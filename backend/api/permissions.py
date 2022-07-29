@@ -1,11 +1,10 @@
+"""Модуль описания пермишенов."""
 from rest_framework.permissions import (BasePermission,
                                         IsAuthenticatedOrReadOnly)
 
 
 class AuthorAdminOrReadOnly(IsAuthenticatedOrReadOnly):
-    """
-    Автору и администраторам разрешено всё, остальным только чтение.
-    """
+    """Автору и администраторам разрешено всё, остальным только чтение."""
     def has_object_permission(self, request, view, obj):
         return (
             request.method in ('GET', )
@@ -20,9 +19,7 @@ class AuthorAdminOrReadOnly(IsAuthenticatedOrReadOnly):
 
 
 class AdminOrReadOnly(BasePermission):
-    """
-    Админу можно всё, остальным только чтение.
-    """
+    """Админу можно всё, остальным только чтение."""
     def has_permission(self, request, view):
         return (
             request.method in ('GET', )
@@ -34,9 +31,7 @@ class AdminOrReadOnly(BasePermission):
 
 
 class AdminOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
-    """
-    Владельцу учётки и админу можно всё, остальным только чтение.
-    """
+    """Владельцу учётки и админу можно всё, остальным только чтение."""
     def has_object_permission(self, request, view, obj):
         return (
             request.method in ('GET', )

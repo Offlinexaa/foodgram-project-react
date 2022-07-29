@@ -1,3 +1,4 @@
+"""Модуль описания сериализаторов."""
 from re import match
 from typing import Any
 from django.shortcuts import get_object_or_404
@@ -18,6 +19,8 @@ User = get_user_model()
 class UserSerializer(ModelSerializer):
     """
     Сериализатор для модели FoodgramUser.
+    Поле "password" только для записи - используется при самостоятельной
+    регистрации пользователя.
     """
     is_subscribed = SerializerMethodField()
 
@@ -35,9 +38,7 @@ class UserSerializer(ModelSerializer):
         read_only_fields = 'is_subscribed',
 
     def get_is_subscribed(self, obj: object) -> bool:
-        """
-        Проверка подписки текущего пользователя на просматриваемого.
-        """
+        """Проверка подписки текущего пользователя на просматриваемого."""
         user = self.context.get('request').user
         if user.is_anonymous or (user == obj):
             return False
@@ -45,9 +46,7 @@ class UserSerializer(ModelSerializer):
 
 
 class RecipeSmallSerializer(ModelSerializer):
-    """
-    Сериализатор для модели Recipe с сокращённым списком полей.
-    """
+    """Сериализатор для модели Recipe с сокращённым списком полей."""
     class Meta:
         model = Recipe
         fields = 'id', 'name', 'image', 'cooking_time'
@@ -76,21 +75,20 @@ class UserFollowsSerializer(UserSerializer):
         read_only_fields = '__all__',
 
     def get_recipes_count(self, obj: object) -> int:
-        """
-        Показывает суммарное количество рецептов у каждого автора.
-        """
+        """Показывает суммарное количество рецептов у каждого автора."""
         return obj.recipes.count()
 
     def get_is_subscribed(*args) -> bool:
         """
         Проверка подписки текущего пользователя на просматриваемого.
         Переопределяем метод для сокращения нагрузки, так как всегда
-        возвращает `True`.
+        возвращает "True".
         """
         return True
 
 
 class CreateUserSerializer(UserSerializer):
+    """Сериализатор, применяемый при создании пользователей."""
     class Meta:
         model = User
         fields = (
@@ -104,9 +102,7 @@ class CreateUserSerializer(UserSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data: dict) -> object:
-        """
-        Создаёт нового пользователя.
-        """
+        """Создаёт нового пользователя."""
         user = User(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -118,9 +114,7 @@ class CreateUserSerializer(UserSerializer):
         return user
 
     def validate_username(self, username: str):
-        """
-        Проверяет введённый юзернейм.
-        """
+        """Валидация введённого username."""
         if len(username) < 3:
             raise ValidationError(
                 'Длина username допустима от 3 до 150'
@@ -133,9 +127,7 @@ class CreateUserSerializer(UserSerializer):
 
 
 class IngredientSerializer(ModelSerializer):
-    """
-    Сериализатор для модели Ingredients.
-    """
+    """Сериализатор для модели Ingredients."""
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -143,24 +135,21 @@ class IngredientSerializer(ModelSerializer):
 
 
 class TagSerializer(ModelSerializer):
-    """
-    Сериализатор для модели Tag.
-    """
+    """Сериализатор для модели Tag."""
     class Meta:
         model = Tag
         fields = '__all__'
         read_only_fields = ('__all__', )
 
     def validate_color(self, color: str) -> str:
+        """Валидация формата поля color."""
         color = str(color).strip(' #')
         hex_color_validate(color)
         return f'#{color}'
 
 
 class RecipeSerializer(ModelSerializer):
-    """
-    Сериализатор для модели Recipe.
-    """
+    """Сериализатор для модели Recipe."""
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
     ingredients = SerializerMethodField()
@@ -188,9 +177,7 @@ class RecipeSerializer(ModelSerializer):
         )
 
     def get_ingredients(self, obj: object) -> Any:
-        """
-        Возвращает список ингридиентов для рецепта.
-        """
+        """Возвращает список ингридиентов для рецепта."""
         ingredients = obj.ingredients.values(
             'id',
             'name',
@@ -201,7 +188,7 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_favorited(self, obj: object) -> bool:
         """
-        Возвращает True если переданный объект находится в избранном у
+        Возвращает "True" если переданный рецепт находится в избранном у
         текущего пользователя.
         """
         user = self.context.get('request').user
@@ -211,7 +198,7 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_in_shopping_cart(self, obj: object) -> bool:
         """
-        Возвращает True если переданный объект находится в списке покупок у
+        Возвращает "True" если переданный рецепт находится в списке покупок у
         текущего пользователя.
         """
         user = self.context.get('request').user
@@ -220,9 +207,7 @@ class RecipeSerializer(ModelSerializer):
         return False
 
     def validate(self, data):
-        """
-        Проверка вводных данных при создании/редактировании рецепта.
-        """
+        """Проверка вводных данных при создании/редактировании рецепта."""
         name = str(self.initial_data.get('name')).strip()
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
@@ -262,9 +247,7 @@ class RecipeSerializer(ModelSerializer):
         return data
 
     def create(self, validated_data):
-        """
-        Создаёт новый объект модели Recipe.
-        """
+        """Создаёт новый объект модели Recipe."""
         image = validated_data.pop('image')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
@@ -274,9 +257,7 @@ class RecipeSerializer(ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
-        """
-        Обновляет объект Recipe.
-        """
+        """Обновляет объект Recipe."""
         tags = validated_data.get('tags')
         ingredients = validated_data.get('ingredients')
 
