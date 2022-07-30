@@ -144,6 +144,11 @@ class Recipe(Model):
     text = TextField(
         verbose_name='Описание рецепта',
     )
+    
+    def _get_count_added_to_favorite(self):
+        return self.favorite_recipe.count()
+
+    _get_count_added_to_favorite.short_description = 'Добавлено в избранное, раз'
 
     class Meta:
         verbose_name = 'Рецепт'
