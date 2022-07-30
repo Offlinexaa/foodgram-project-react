@@ -71,7 +71,7 @@ jobs:
         cp -TR ./data ../app/data
         cp -TR ./docs ../app/docs
         cp -TR ./infra ../app/infra
-        cp -TR ./infra ../app/frontend
+        cp -TR ./frontend ../app/frontend
         tar -cvf deploy.tar ../app/
     
     - name: Copytar file to server
