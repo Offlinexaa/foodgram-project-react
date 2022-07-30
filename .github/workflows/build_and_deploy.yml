@@ -68,10 +68,10 @@ jobs:
     - name: Prepare tar to migrate
       run: |
         mkdir ../app
-        cp -TR ./data ../build/data
-        cp -TR ./docs ../build/docs
-        cp -TR ./infra ../build/infra
-        cp -TR ./infra ../build/frontend
+        cp -TR ./data ../app/data
+        cp -TR ./docs ../app/docs
+        cp -TR ./infra ../app/infra
+        cp -TR ./infra ../app/frontend
         tar -cvf deploy.tar ../app/
     
     - name: Copytar file to server
