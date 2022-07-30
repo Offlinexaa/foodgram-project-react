@@ -22,6 +22,7 @@ def class_obj_validate(value: str, klass: object = None) -> object:
                 f'Обекта {type(klass)} с ID={value} не существует.'
             )
         return obj[0]
+    return None
 
 
 def hex_color_validate(value: str) -> None:
