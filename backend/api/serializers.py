@@ -1,17 +1,17 @@
 """Модуль описания сериализаторов."""
 from re import match
 from typing import Any
-from django.shortcuts import get_object_or_404
 
-from drf_extra_fields.fields import Base64ImageField
 from django.contrib.auth import get_user_model
 from django.db.models import F
+from django.shortcuts import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
 from recipe.models import Ingredient, Recipe, Tag
-from .validators import class_obj_validate, hex_color_validate
 from .utils import recipe_amount_ingredients_set
+from .validators import class_obj_validate, hex_color_validate
 
 User = get_user_model()
 
@@ -35,7 +35,7 @@ class UserSerializer(ModelSerializer):
             'is_subscribed',
         )
         extra_kwargs = {'password': {'write_only': True}}
-        read_only_fields = 'is_subscribed',
+        read_only_fields = ('is_subscribed', )
 
     def get_is_subscribed(self, obj: object) -> bool:
         """Проверка подписки текущего пользователя на просматриваемого."""
@@ -50,7 +50,7 @@ class RecipeSmallSerializer(ModelSerializer):
     class Meta:
         model = Recipe
         fields = 'id', 'name', 'image', 'cooking_time'
-        read_only_fields = '__all__',
+        read_only_fields = ('__all__', )
 
 
 class UserFollowsSerializer(UserSerializer):
@@ -72,7 +72,7 @@ class UserFollowsSerializer(UserSerializer):
             'recipes_count',
             'is_subscribed',
         )
-        read_only_fields = '__all__',
+        read_only_fields = ('__all__', )
 
     def get_recipes_count(self, obj: object) -> int:
         """Показывает суммарное количество рецептов у каждого автора."""
