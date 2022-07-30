@@ -33,7 +33,12 @@ class IngredientInline(TabularInline):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     """Класс настройки вида админки для рецептов."""
-    list_display = ('name', 'author', 'getimage', 'tags')
+    list_display = (
+        'name',
+        'author',
+        'getimage',
+        '_get_count_added_to_favorite'
+    )
     fields = (
         ('image', ),
         ('name', 'author', ),
@@ -44,8 +49,7 @@ class RecipeAdmin(ModelAdmin):
     list_filter = (
         'name',
         'author__username',
-        'tags',
-        '_get_count_added_to_favorite'
+        'tags'
     )
     search_fields = ('name', 'author', )
     save_on_top = True

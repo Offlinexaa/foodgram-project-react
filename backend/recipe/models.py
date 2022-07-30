@@ -146,7 +146,7 @@ class Recipe(Model):
     )
     
     def _get_count_added_to_favorite(self):
-        return self.favorites.count()
+        return self.favorite.count()
 
     _get_count_added_to_favorite.short_description = 'Добавлено в избранное, раз'
 
