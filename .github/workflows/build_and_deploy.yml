@@ -74,7 +74,7 @@ jobs:
         cp -TR ./infra ../build/frontend
         tar -cvf deploy.tar ../build/
     
-    -name: Copytar file to server
+    - name: Copytar file to server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
