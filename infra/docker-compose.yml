@@ -2,10 +2,9 @@ version: '3.3'
 services:
 
   frontend:
-    image: offlinexaa/foodgram_frontend:latest
-    # build:
-    #   context: ../frontend
-    #   dockerfile: Dockerfile
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
 
