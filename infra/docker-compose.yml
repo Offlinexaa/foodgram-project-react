@@ -17,9 +17,6 @@ services:
 
   backend:
     image: offlinexaa/foodgram_backend:latest
-    # build:
-    #   context: ../backend
-    #   dockerfile: Dockerfile
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
