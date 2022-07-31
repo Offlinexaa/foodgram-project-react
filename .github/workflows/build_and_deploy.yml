@@ -96,8 +96,7 @@ jobs:
           cd ~/app/infra
           docker-compose stop
           docker-compose rm -f backend
-          docker pull offlinexaa/foodgram_backend:latest
-          docker-compose up -d
+          docker-compose up -d --quiet-pull
           docker-compose exec backend python manage.py makemigrations
           docker-compose exec backend python manage.py migrate
           docker-compose exec backend python manage.py collectstatic --noinput
