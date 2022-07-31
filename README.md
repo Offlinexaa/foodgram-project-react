@@ -120,5 +120,5 @@ docker-compose 1.25.0
 Для целей тестирования демонстрационный сервер доступен по адресу: 
 
 ```
-http://foodgram-offxaa.ddns.net
+http://foodgram-offxaa.myddns.me/
 ```
