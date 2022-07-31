@@ -21,7 +21,7 @@ class FoodgramUserAdmin(UserAdmin):
                     ('username', 'email'),
                     ('first_name', 'last_name'),
                     ('date_joined', ),
-                    ('password', ),
+                    ('password', )
                 ),
             }
         ),
@@ -31,18 +31,18 @@ class FoodgramUserAdmin(UserAdmin):
                 'fields': (
                     'is_active',
                     'is_superuser',
-                    'is_staff',
+                    'is_staff'
                 ),
             }
-        ),
+        )
     )
     search_fields = (
         'username',
-        'email',
+        'email'
     )
     list_filter = (
         'username',
         'first_name',
-        'email',
+        'email'
     )
     save_on_top = True

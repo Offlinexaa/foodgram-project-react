@@ -32,7 +32,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     pagination_class = PageLimitPagination
     add_serializer = UserFollowsSerializer
 
-    @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
+    @action(methods=('GET', 'POST', 'DELETE'), detail=True)
     def subscribe(self, request, id):
         """Создаёт/удалет подписку текущего пользователя на автора рецепта."""
         return self.add_del_obj(id, 'subscribe')
@@ -79,12 +79,12 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
     pagination_class = PageLimitPagination
     filterset_class = RecipeFilter
 
-    @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
+    @action(methods=('GET', 'POST', 'DELETE'), detail=True)
     def favorite(self, request, pk):
         """Добавляет/удалет рецепт в избранное текущему пользователю."""
         return self.add_del_obj(pk, 'favorite')
 
-    @action(methods=('GET', 'POST', 'DELETE', ), detail=True)
+    @action(methods=('GET', 'POST', 'DELETE'), detail=True)
     def shopping_cart(self, request, pk):
         """Добавляет/удалет рецепт в список покупок текущего пользователя."""
         return self.add_del_obj(pk, 'shopping_cart')

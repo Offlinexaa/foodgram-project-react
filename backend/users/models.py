@@ -18,7 +18,7 @@ class FoodgramUser(AbstractUser):
         verbose_name='Адрес электронной почты',
         help_text='Обязательное поле',
         unique=True,
-        max_length=254,
+        max_length=254
     )
     username = CharField(
         verbose_name='Уникальный юзернейм',
@@ -28,17 +28,17 @@ class FoodgramUser(AbstractUser):
         validators=(
             MinLengthValidator(min_length=3),
             RegexValidator(),
-        ),
+        )
     )
     first_name = CharField(
         verbose_name='Имя',
         help_text='Обязательное поле',
-        max_length=150,
+        max_length=150
     )
     last_name = CharField(
         verbose_name='Фамилия',
         help_text='Обязательное поле',
-        max_length=150,
+        max_length=150
     )
     password = CharField(
         verbose_name=gettext_lazy('password'),
@@ -46,13 +46,13 @@ class FoodgramUser(AbstractUser):
         max_length=150,
         validators=(
             MinLengthValidator(min_length=6),
-        ),
+        )
     )
     subscription = ManyToManyField(
         verbose_name='Подписка',
         related_name='followers',
         to='self',
-        symmetrical=False,
+        symmetrical=False
     )
 
     class Meta:
@@ -67,4 +67,4 @@ class FoodgramUser(AbstractUser):
         )
 
     def __str__(self) -> str:
-        return str(self.username)
+        return self.username

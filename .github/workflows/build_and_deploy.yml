@@ -98,6 +98,9 @@ jobs:
           docker-compose rm -f backend
           docker pull offlinexaa/foodgram_backend:latest
           docker-compose up -d
+          docker-compose exec backend python manage.py makemigrations
+          docker-compose exec backend python manage.py migrate
+          docker-compose exec backend python manage.py collectstatic --no-input
 
   notify:
     name: Send notification in Telegram
