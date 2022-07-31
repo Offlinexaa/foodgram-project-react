@@ -3,13 +3,14 @@ from re import match
 from typing import Any
 
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
+from recipe.models import Ingredient, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
                                         ValidationError)
 
-from recipe.models import Ingredient, Recipe, Tag
 from .utils import recipe_amount_ingredients_set
 from .validators import class_obj_validate, hex_color_validate
 
@@ -57,7 +58,8 @@ class UserFollowsSerializer(UserSerializer):
     """
     Сериализатор для вывода авторов на которых подписан текущий пользователь.
     """
-    recipes = RecipeSmallSerializer(many=True, read_only=True)
+    # recipes = RecipeSmallSerializer(many=True, read_only=True)
+    recipes = SerializerMethodField(method_name='paginated_recipes')
     recipes_count = SerializerMethodField(method_name='get_recipes_count')
 
     class Meta:
@@ -85,6 +87,15 @@ class UserFollowsSerializer(UserSerializer):
         возвращает "True".
         """
         return True
+
+    def paginated_recipes(self, obj):
+        paginator = Paginator(
+            obj.recipes.all(),
+            self.context.get('request').query_params.get('recipes_limit', 3)
+        )
+        recipes = paginator.page(1)
+        serializer = RecipeSmallSerializer(recipes, many=True)
+        return serializer.data
 
 
 class CreateUserSerializer(UserSerializer):
