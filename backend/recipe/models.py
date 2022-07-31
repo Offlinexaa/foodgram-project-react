@@ -39,7 +39,6 @@ class IngredientAmount(Model):
     """
     amount = PositiveIntegerField(
         verbose_name='Количество',
-        default=0,
         validators=(
             MinValueValidator(1, 'Не может быть меньше 1.'),
         ),
@@ -64,7 +63,7 @@ class IngredientAmount(Model):
         constraints = (
             UniqueConstraint(
                 name='Unique_ingredient_in_recipe',
-                fields=('ingredients', 'recipe'),
+                fields=('ingredients', 'recipe')
             ),
         )
 
@@ -99,11 +98,10 @@ class Recipe(Model):
         to=User,
         on_delete=CASCADE,
         verbose_name='Автор рецепта',
-        related_name='recipes',
+        related_name='recipes'
     )
     cooking_time = PositiveIntegerField(
         verbose_name='Время приготовдения',
-        default=0,
         validators=(
             MinValueValidator(1, 'Блюдо не может готовиться менее 1 минуты.'),
         )
@@ -111,7 +109,7 @@ class Recipe(Model):
     favorite = ManyToManyField(
         to=User,
         verbose_name='Избранные рецепты',
-        related_name='favorites',
+        related_name='favorites'
     )
     ingredients = ManyToManyField(
         to=Ingredient,
@@ -121,25 +119,25 @@ class Recipe(Model):
     )
     image = ImageField(
         verbose_name='Изображение',
-        upload_to='recipe_images/',
+        upload_to='recipe_images/'
     )
     name = CharField(
         verbose_name='Название рецепта',
-        max_length=200,
+        max_length=200
     )
     pub_date = DateTimeField(
         verbose_name='Дата публикации',
-        auto_now_add=True,
+        auto_now_add=True
     )
     shopping_cart = ManyToManyField(
         to=User,
         verbose_name='Список покупок',
-        related_name='in_cart',
+        related_name='in_cart'
     )
     tags = ManyToManyField(
         to=Tag,
         related_name='recipes',
-        verbose_name='Теги',
+        verbose_name='Теги'
     )
     text = TextField(
         verbose_name='Описание рецепта',
@@ -158,6 +156,6 @@ class Recipe(Model):
         constraints = (
             UniqueConstraint(
                 name='unique_per_author',
-                fields=('name', 'author'),
+                fields=('name', 'author')
             ),
         )

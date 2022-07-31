@@ -26,7 +26,7 @@ class MinLengthValidator:
 class RegexValidator:
     """Проверяет на соответствие регулялярному выражению."""
     regex = r'^[\w.@+-]+\Z'
-    message = ('Значение поля содержит недопустимые символы.')
+    message = 'Значение поля содержит недопустимые символы.'
 
     def __init__(self, regex: str = None, message: str = None) -> None:
         if regex:

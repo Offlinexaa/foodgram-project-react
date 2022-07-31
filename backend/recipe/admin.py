@@ -11,7 +11,7 @@ EMPTY_VAL_PLACEHOLDER = 'Не указано'
 @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
     """Класс настройки вида админки для ингредиентов."""
-    list_display = ('name', 'measurement_unit', )
+    list_display = ('name', 'measurement_unit')
     search_fields = ('name', )
     list_filter = ('name', )
     empty_value_display = EMPTY_VAL_PLACEHOLDER
@@ -41,9 +41,9 @@ class RecipeAdmin(ModelAdmin):
     )
     fields = (
         ('image', ),
-        ('name', 'author', ),
-        ('tags', 'cooking_time', ),
-        ('text', ),
+        ('name', 'author'),
+        ('tags', 'cooking_time'),
+        ('text', )
     )
     raw_id_fields = ('author', )
     list_filter = (
@@ -51,7 +51,7 @@ class RecipeAdmin(ModelAdmin):
         'author__username',
         'tags'
     )
-    search_fields = ('name', 'author', )
+    search_fields = ('name', 'author')
     save_on_top = True
     empty_value_display = EMPTY_VAL_PLACEHOLDER
     inlines = (IngredientInline, )
@@ -66,7 +66,7 @@ class RecipeAdmin(ModelAdmin):
 class TagAdmin(ModelAdmin):
     """Класс настройки вида админки для тегов."""
     form = TagForm
-    list_display = ('name', 'slug', 'color', )
+    list_display = ('name', 'slug', 'color')
     fieldsets = (
         (
             None,
