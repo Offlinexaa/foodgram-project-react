@@ -92,14 +92,14 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
+          docker-compose -f ~/app/infra/docker-compose.yml stop
           tar -xvf deploy.tar
           cd ~/app/infra
-          docker-compose stop
-          docker-compose rm -f backend
+          docker-compose pull
           docker-compose up -d --quiet-pull
-          docker-compose exec backend python manage.py makemigrations
-          docker-compose exec backend python manage.py migrate
-          docker-compose exec backend python manage.py collectstatic --noinput
+          docker-compose exec -T backend python manage.py makemigrations
+          docker-compose exec -T backend python manage.py migrate
+          docker-compose exec -T backend python manage.py collectstatic --noinput
 
   notify:
     name: Send notification in Telegram
