@@ -194,8 +194,8 @@ class RecipeSerializer(ModelSerializer):
         текущего пользователя.
         """
         user = self.context.get('request').user
-        return (user.is_authenticated and
-                user.favorites.filter(id=obj.id).exists())
+        return (user.is_authenticated
+                and user.favorites.filter(id=obj.id).exists())
 
     def get_is_in_shopping_cart(self, obj: object) -> bool:
         """
@@ -203,16 +203,15 @@ class RecipeSerializer(ModelSerializer):
         текущего пользователя.
         """
         user = self.context.get('request').user
-        return (user.is_authenticated and
-                user.in_cart.filter(id=obj.id).exists())
-
+        return (user.is_authenticated
+                and user.in_cart.filter(id=obj.id).exists())
 
     def validate(self, data):
         """Проверка вводных данных при создании/редактировании рецепта."""
         name = str(data['name']).strip()
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
-        values_as_list = {'tags':tags, 'ingradients':ingredients}
+        values_as_list = {'tags': tags, 'ingradients': ingredients}
 
         for key, value in values_as_list.items():
             if not isinstance(value, list):
@@ -263,7 +262,7 @@ class RecipeSerializer(ModelSerializer):
         """Обновляет объект Recipe."""
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        
+
         super().update(recipe, validated_data)
 
         if tags:
