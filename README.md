@@ -121,4 +121,6 @@ docker-compose 1.25.0
 
 ```
 http://foodgram-offxaa.myddns.me/
+Логин, почта и пароль администратора: admin / a@a.local / !QAZxsw23edc
 ```
+
