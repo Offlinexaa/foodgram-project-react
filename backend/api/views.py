@@ -1,10 +1,6 @@
 """Модуль описания вьюсетов."""
-import csv
-from datetime import datetime as dt
-
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
-from django.http.response import HttpResponse
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -19,6 +15,7 @@ from recipe.models import Ingredient, IngredientAmount, Recipe, Tag
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           RecipeSmallSerializer, TagSerializer,
                           UserFollowsSerializer)
+from .utils import prepare_file
 
 User = get_user_model()
 
@@ -108,26 +105,4 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             sum_amount=Sum('amount')
         )
 
-        filename = 'shopping_list.csv'
-        create_time = dt.now().strftime('%d.%m.%Y %H:%M')
-
-        response = HttpResponse(content_type='text/csv; charset=utf-8')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
-
-        writer = csv.writer(response)
-        writer.writerow([f'Список покупок пользователя: {user.first_name}', ])
-        writer.writerow([f'{create_time}', ])
-        writer.writerow(['', ])
-        writer.writerow(['Ингредиент', 'Количество', 'Единицы измерения'])
-        for ingredient in ingredients:
-            writer.writerow(
-                [
-                    ingredient['ingredient'],
-                    ingredient['sum_amount'],
-                    ingredient['measure']
-                ]
-            )
-        writer.writerow(['', ])
-        writer.writerow(['Сформировано в продуктовом помощнике Foodgram', ])
-
-        return response
+        return prepare_file(user, ingredients)

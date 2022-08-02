@@ -14,17 +14,12 @@
 
 ```
 git clone https://github.com/Offlinexaa/foodgram-project-react.git
-```
-
-```
 cd foodgram-project-react/infra/
 ```
 
 Заполнить файл infra/.env (пример заполнения ниже). Для примера используется редактор nano:
 
-```
-nano .env
-```
+`nano .env`
 
 Добавить пользователя в группу docker или предоставить права суперпользователя.
 
@@ -35,9 +30,7 @@ systemctl reload docker.service
 
 Запустить проект:
 
-```
-up.sh
-```
+`up.sh`
 
 Будет выполнена проверка на отсутствие незаполненных переменных в .env. После проверки вам будет предложена возможность импортировать демонстрационный образец данных. После запуска контейнеров так же будет предложено создать учётную запись суперпользователя Django.
 
@@ -45,25 +38,19 @@ up.sh
 
 Проект доступен по ссылке:
 
-```
-http://localhost/ или http://<your_external_ip>/
-```
+`http://localhost/ или http://<your_external_ip>/`
 
 ### Импорт данных вручную
 
 Для импорта демонстрационных данных воспользуйтесь командой
 
-```
-docker-compose exec backend python manage.py loaddata ./data/db.json
-```
+`docker-compose exec backend python manage.py loaddata ./data/db.json`
 
 ### Создание суперпользователя вручную
 
 Для создания суперпользователя вручную воспользуйтесь командой
 
-```
-docker-compose exec backend python manage.py createsuperuser
-```
+`docker-compose exec backend python manage.py createsuperuser`
 
 ### Требования и пример заполнения файла .env
 
@@ -105,9 +92,7 @@ SECRET_KEY=Here_shoud_be_something_long_and_complex
 
 ### Документация доступна по ссылке:
 
-```
-http://localhost/api/docs/
-```
+`http://localhost/api/docs/`
 
 ### Требования:
 
