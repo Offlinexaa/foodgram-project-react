@@ -21,7 +21,7 @@ class Ingredient(Model):
     )
 
     def __str__(self) -> str:
-        return (f'{self.name}, {self.measurement_unit}')
+        return f'{self.name}, {self.measurement_unit}'
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -58,6 +58,9 @@ class IngredientAmount(Model):
         related_name='ingredient',
         verbose_name='Рецепты, содержащие ингредиенты',
     )
+
+    def __str__(self) -> str:
+        return f'{self.recipe}: {self.amount}, {self.ingredients}'
 
     class Meta:
         verbose_name = 'Ингредиент'
