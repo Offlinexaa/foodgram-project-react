@@ -46,5 +46,5 @@ def prepare_file(user, ingredients, filename='shopping_list.csv'):
         )
     writer.writerow(['', ])
     writer.writerow(['Сформировано в продуктовом помощнике Foodgram', ])
-    
+
     return response
