@@ -20,6 +20,9 @@ class Ingredient(Model):
         max_length=200,
     )
 
+    def __str__(self) -> str:
+        return (f'{self.name}, {self.measurement_unit}')
+
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
@@ -86,6 +89,9 @@ class Tag(Model):
         unique=True,
     )
 
+    def __str__(self) -> str:
+        return self.name
+
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
@@ -148,6 +154,9 @@ class Recipe(Model):
 
     _get_count_added_to_favorite.short_description = ('Добавлено в избранное'
                                                       ', раз')
+
+    def __str__(self) -> str:
+        return self.name
 
     class Meta:
         verbose_name = 'Рецепт'
