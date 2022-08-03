@@ -80,7 +80,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
-        # passphrase: ${{ secrets.PASSPHRASE }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         source: "deploy.tar"
         target: "~/"
 
@@ -90,7 +90,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
-        # passphrase: ${{ secrets.PASSPHRASE }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           docker-compose -f ~/app/infra/docker-compose.yml stop
           tar -xvf deploy.tar
